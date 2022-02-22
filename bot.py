@@ -129,6 +129,6 @@ async def on_voice_state_update(member, before, after):
         await manage_voice_text_channels(member, after.channel.guild, after.channel)
     return
 
-    
-if __name__ != '__main__':
+
+if __name__ == '__main__':
     dcbot.run(token)
