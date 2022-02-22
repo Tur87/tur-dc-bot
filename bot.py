@@ -31,14 +31,14 @@ async def manage_voice_text_channels(member, guild, channel):
     ''' Create associated text channels and manage user access. '''
     await guild.fetch_channels()
     textchannel = None
-    textname = channel.name.lower()
+    textname = channel.name.lower().replace(' ','-')
     members = 0
     for cmember in channel.members:
         if cmember.bot is True:
             continue
         members += 1
-    for chan in guild.text_channels:
-        if chan.category != channel.category or chan.name.lower() != textname:
+    for chan in await guild.fetch_channels():
+        if chan.category != channel.category or chan.name.lower() != textname or str(chan.type).lower() != 'text':
             continue
         textchannel = chan
     if textchannel is not None and members < 1:
@@ -102,7 +102,11 @@ async def manage_voice_text_channels(member, guild, channel):
             send_messages=True,
             create_instant_invite=False
             )
-
+    if members < 1:
+        await textchannel.delete(
+            reason='VC {textname} not in use'
+        )
+        return True
     return True
 
 @dcbot.event
