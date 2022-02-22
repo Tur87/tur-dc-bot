@@ -41,8 +41,6 @@ async def manage_voice_text_channels(member, guild, channel):
         if chan.category != channel.category or chan.name != textname:
             continue
         textchannel = chan
-    if textchannel is None and members < 1:
-        return
     if textchannel is None:
         musicbot = None
         mbcmd = None
