@@ -44,6 +44,8 @@ async def manage_voice_text_channels(member, guild, channel):
             continue
         textchannel = chan
     if textchannel is None and members < 1:
+        return
+    if textchannel is None:
         musicbot = None
         mbcmd = None
         perms = discord.PermissionOverwrite(
@@ -118,7 +120,7 @@ async def on_message(message):
     await dcbot.process_commands(message)
     return
 
-
+'python' '/app/bot.py'
 @dcbot.event
 async def on_voice_state_update(member, before, after):
     ''' When a user changes voice state, check channels for neccessary action. '''
