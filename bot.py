@@ -41,6 +41,11 @@ async def manage_voice_text_channels(member, guild, channel):
         if chan.category != channel.category or chan.name != textname:
             continue
         textchannel = chan
+    if textchannel is not None and members < 1:
+        await textchannel.delete(
+            reason='VC {textname} not in use'
+        )
+        return True
     if textchannel is None:
         if members < 1:
             return
@@ -97,11 +102,7 @@ async def manage_voice_text_channels(member, guild, channel):
             send_messages=True,
             create_instant_invite=False
             )
-    if members < 1:
-        await textchannel.delete(
-            reason='VC {textname} not in use'
-        )
-        return True
+
     return True
 
 @dcbot.event
