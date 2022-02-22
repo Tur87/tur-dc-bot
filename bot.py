@@ -38,7 +38,7 @@ async def manage_voice_text_channels(member, guild, channel):
             continue
         members += 1
     for chan in guild.text_channels:
-        if chan.category != channel.category or chan.name != textname:
+        if chan.category != channel.category or chan.name.lower() != textname:
             continue
         textchannel = chan
     if textchannel is not None and members < 1:
