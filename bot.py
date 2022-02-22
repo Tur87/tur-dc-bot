@@ -42,6 +42,8 @@ async def manage_voice_text_channels(member, guild, channel):
             continue
         textchannel = chan
     if textchannel is None:
+        if members < 1:
+            return
         musicbot = None
         mbcmd = None
         perms = discord.PermissionOverwrite(
