@@ -8,8 +8,26 @@ import logging as log
 from lazylog import Logger
 from discord.ext import commands as dcomm
 
-dcbot = None
+
+current_dir = os.path.dirname(os.path.abspath(__file__))
+term_specs = {"level": log.INFO, "splitLines": True, "pretty": True }
+Logger.init(current_dir, termSpecs=term_specs)
+log.getLogger("discord").setLevel(log.WARNING)
 config = {}
+prefix = '-'
+with open(f'{current_dir}/config.json', encoding='utf-8') as cfgfh:
+    config = json.loads(cfgfh.read())
+if 'token' not in config:
+    log.critical('Config is missing token')
+    sys.exit(1)
+token = config['token']
+if 'prefix' in config:
+    prefix = config['prefix']
+intents = discord.Intents.default()
+intents.members = True
+dcbot = dcomm.Bot(command_prefix=prefix, intents=intents)
+dcbot.run(token)
+
 
 async def manage_voice_text_channels(member, guild, channel):
     ''' Create associated text channels and manage user access. '''
@@ -110,27 +128,3 @@ async def on_voice_state_update(member, before, after):
     if after.channel is not None:
         await manage_voice_text_channels(member, after.channel.guild, after.channel)
     return
-
-def main(bot, config):
-    ''' Main bot fucntion. '''
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    term_specs = {"level": log.INFO, "splitLines": True, "pretty": True }
-    Logger.init(current_dir, termSpecs=term_specs)
-    log.getLogger("discord").setLevel(log.WARNING)
-
-    prefix = '-'
-    with open(f'{current_dir}/config.json', encoding='utf-8') as cfgfh:
-        config = json.loads(cfgfh.read())
-    if 'token' not in config:
-        log.critical('Config is missing token')
-        sys.exit(1)
-    token = config['token']
-    if 'prefix' in config:
-        prefix = config['prefix']
-    intents = discord.Intents.default()
-    intents.members = True
-    bot = dcomm.Bot(command_prefix=prefix, intents=intents)
-    bot.run(token)
-
-if __name__ == '__main__':
-    main(dcbot, config)
