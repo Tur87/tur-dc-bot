@@ -9,6 +9,7 @@ from lazylog import Logger
 from discord.ext import commands as dcomm
 
 dcbot = None
+config = {}
 
 async def manage_voice_text_channels(member, guild, channel):
     ''' Create associated text channels and manage user access. '''
@@ -109,14 +110,13 @@ async def on_voice_state_update(member, before, after):
         await manage_voice_text_channels(member, after.channel.guild, after.channel)
     return
 
-def main(bot):
+def main(bot, config):
     ''' Main bot fucntion. '''
     current_dir = os.path.dirname(os.path.abspath(__file__))
     term_specs = {"level": log.INFO, "splitLines": True, "pretty": True }
     Logger.init(current_dir, termSpecs=term_specs)
     log.getLogger("discord").setLevel(log.WARNING)
 
-    config = {}
     prefix = '-'
     with open(f'{current_dir}/config.json', encoding='utf-8') as cfgfh:
         config = json.loads(cfgfh.read())
@@ -132,4 +132,4 @@ def main(bot):
     bot.run(token)
 
 if __name__ == '__main__':
-    main(dcbot)
+    main(dcbot, config)
