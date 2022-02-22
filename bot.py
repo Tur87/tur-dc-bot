@@ -26,8 +26,6 @@ if 'prefix' in config:
 intents = discord.Intents.default()
 intents.members = True
 dcbot = dcomm.Bot(command_prefix=prefix, intents=intents)
-dcbot.run(token)
-
 
 async def manage_voice_text_channels(member, guild, channel):
     ''' Create associated text channels and manage user access. '''
@@ -130,3 +128,7 @@ async def on_voice_state_update(member, before, after):
     if after.channel is not None:
         await manage_voice_text_channels(member, after.channel.guild, after.channel)
     return
+
+    
+if __name__ != '__main__':
+    dcbot.run(token)
