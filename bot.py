@@ -90,6 +90,7 @@ async def manage_voice_text_channels(member, guild, channel):
 async def on_ready():
     ''' Once the bot is ready, log ready. '''
     log.info("%s has connected to Discord!", dcbot.user)
+    await dcbot.change_presence(activity=discord.Game(name=config['activity'],type=1))
 
 @dcbot.event
 async def on_message(message):
