@@ -41,10 +41,11 @@ async def manage_voice_text_channels(member, guild, channel):
         if chan.category != channel.category or chan.name.lower() != textname or str(chan.type).lower() != 'text':
             continue
         textchannel = chan
+    print(textchannel)
     if textchannel is not None and members < 1:
-        await textchannel.delete(
-            reason='VC {textname} not in use'
-        )
+        #await textchannel.delete(
+        #    reason='VC {textname} not in use'
+        #)
         return True
     if textchannel is None:
         if members < 1:
@@ -75,37 +76,38 @@ async def manage_voice_text_channels(member, guild, channel):
             overwrites[musicbot] = perms
         for cmember in channel.members:
             overwrites[cmember] = perms
-        textchannel = await guild.create_text_channel(
-            f'{textname}',
-            overwrites=overwrites,
-            category=channel.category,
-            position=channel.position + 1,
-            reason=f'VC {textname} in use'
-        )
+        #textchannel = await guild.create_text_channel(
+        #    f'{textname}',
+        #    overwrites=overwrites,
+        #    category=channel.category,
+        #    position=channel.position + 1,
+        #    reason=f'VC {textname} in use'
+        #)
         if mbcmd is not None:
             await textchannel.send(
                 content=f'To use the music bot, commands start with {mbcmd}'
             )
-    if member not in channel.members:
-        await textchannel.set_permissions(
-            member,
-            view_channel=False,
-            read_messages=False,
-            send_messages=False,
-            create_instant_invite=False
-            )
-    else:
-        await textchannel.set_permissions(
-            member,
-            view_channel=True,
-            read_messages=True,
-            send_messages=True,
-            create_instant_invite=False
-            )
+    #if member not in channel.members:
+        #await textchannel.set_permissions(
+        #    member,
+        #    view_channel=False,
+        #    read_messages=False,
+        #    send_messages=False,
+        #    create_instant_invite=False
+        #    )
+    #else:
+        #await textchannel.set_permissions(
+        #    member,
+        #    view_channel=True,
+        #    read_messages=True,
+        #    send_messages=True,
+        #    create_instant_invite=False
+        #    )
     if members < 1:
-        await textchannel.delete(
-            reason='VC {textname} not in use'
-        )
+        #await textchannel.delete(
+        #    reason='VC {textname} not in use'
+        #)
+        print("%s is empty, removing" % (textname))
         return True
     return True
 
@@ -127,10 +129,11 @@ async def on_message(message):
 @dcbot.event
 async def on_voice_state_update(member, before, after):
     ''' When a user changes voice state, check channels for neccessary action. '''
-    log.info("%s updated from %s to %s", member, before, after)
     if before.channel is not None:
+        log.info("%s updated to %s", member, before.channel.name)
         await manage_voice_text_channels(member, before.channel.guild, before.channel)
     if after.channel is not None:
+        log.info("%s updated from to %s", member, after.channel.name)
         await manage_voice_text_channels(member, after.channel.guild, after.channel)
     return
 
